@@ -4,24 +4,23 @@ const LOCALSTORAGE_KEY = 'monaca-image';
 // global variables
 let globalLocalStorage = null;
 
-export function getCurrentDateTime() {
-  const now = new Date();
+// API call
+export const getImageFromAI = async (data) => {
+  const key = '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'; // Replace your own API key here
+  const apiEndPoint = 'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0'
+  const response = await fetch(
+    apiEndPoint,
+    {
+      headers: { Authorization: `Bearer ${key}` },
+      method: 'POST',
+      body: JSON.stringify(data),
+    }
+  );
+  const result = await response.blob();
+  return result;
+};
 
-  // Get the current date components
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-  const day = String(now.getDate()).padStart(2, '0');
-
-  // Get the current time components
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-
-  // Combine date and time in the desired format
-  const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}`;
-
-  return formattedDateTime;
-}
-
+// Image-related functions
 export const validImage = (base64Data) => {
   const isValid = /^data:image\/(png|jpeg|jpg);base64,/.test(base64Data);
   return isValid;
@@ -37,6 +36,7 @@ export const convertToBase64 = (blobData) => {
   });
 };
 
+// Database-related functions
 export const readFromLocalStorage = () => {
   if (globalLocalStorage) return globalLocalStorage;
   try {
@@ -56,4 +56,49 @@ export const writeToLocalStorage = (data) => {
     LOCALSTORAGE_KEY,
     stringifiedData
   );
+}
+
+// Cordova-related functions
+const canUsePlugin = () => {
+  if (!window?.plugins?.socialsharing) {
+    alert('This share feature is not supported on this platform');
+    return false;
+  }
+  return true;
+}
+
+export const shareFacebook = (imageSrc) => {
+  if (canUsePlugin()) {
+    window.plugins.socialsharing.shareViaFacebook(
+      'Sharing via Facebook', 
+      imageSrc, 
+      null
+    );
+  }
+};
+
+export const shareInstgarm = (imageSrc) => {
+  if (canUsePlugin()) {
+    window.plugins.socialsharing.shareViaInstagram(
+      'Message via Instagram', 
+      imageSrc
+    );
+  }
+};
+
+// Other functions
+export function getCurrentDateTime() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
+export const validQuery = (query) => {
+  if (!query) return false;
+  // For example, you can further implement to filter bad words.
+  return true;
 }

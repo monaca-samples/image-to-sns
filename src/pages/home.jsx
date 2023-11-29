@@ -1,27 +1,15 @@
 
 import React from 'react';
 import { Navbar, Page, BlockTitle, Block, Input, Button } from 'framework7-react';
-import { convertToBase64, getCurrentDateTime, validImage } from '../js/util';
+import { convertToBase64, getCurrentDateTime, getImageFromAI, validImage, validQuery, shareFacebook, shareInstgarm } from '../js/util';
 import store from '../js/store';
 
-const query = async (data) => {
-  const key = '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';
-  const apiEndPoint = 'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0'
-  const response = await fetch(
-    apiEndPoint,
-    {
-      headers: { Authorization: `Bearer ${key}` },
-      method: 'POST',
-      body: JSON.stringify(data),
-    }
-  );
-  const result = await response.blob();
-  return result;
-};
+const errorIcon = './icons/error.png'; // error icon
+const loadingIcon = './icons/loading.webp'; // loading animation
+const randomPic = 'https://picsum.photos/200'; // get random picture
+
 
 const HomePage = () => {
-  const loadingIcon = './icons/loading.webp';
-  const randomPic = 'https://picsum.photos/200';
   const [inputValue, setInputValue] = React.useState('');
   const [imageSrc, setImageSrc] = React.useState(randomPic);
   const [processing, setProcessing] = React.useState(false);
@@ -31,64 +19,43 @@ const HomePage = () => {
     setProcessing(false);
   };
 
+  /**
+   * Get image from AI, covert to Base64 and assign to Image element
+   */
   const generatePicture = () => {
+    // exit if query is not valid
+    if (!validQuery(inputValue)) return;
+
     setProcessing(true);
+    // set loading image
     setImageSrc(loadingIcon);
-    query({ 'inputs': inputValue })
-    .then(async (resultBlob) => {
-      const base64Data = await convertToBase64(resultBlob);
-      if (validImage(base64Data)) {
-        setImageSrc(base64Data);
-        store.dispatch('addImage', {
-          title: inputValue,
-          src: base64Data,
-          date: getCurrentDateTime(),
-        });
-      } else {
-        alert('Could not generate image. Please try again.');
-        setImageSrc(randomPic);
-      }
-      clear();
-    })
-    .catch(e => {
-      console.log(e);
-      clear();
-    });
+
+    getImageFromAI({ 'inputs': inputValue })
+      .then(async (resultBlob) => {
+        const base64Data = await convertToBase64(resultBlob);
+        if (validImage(base64Data)) {
+          // set AI image
+          setImageSrc(base64Data);
+          store.dispatch('addImage', {
+            title: inputValue,
+            src: base64Data,
+            date: getCurrentDateTime(),
+          });
+          clear();
+        } else {
+          alert('Could not generate image. Please try again.');
+          setImageSrc(errorIcon);
+          setProcessing(false);
+        }
+      })
+      .catch(e => {
+        console.log(e);
+        clear();
+      });
   };
 
   const handleTextChange = (event) => {
     setInputValue(event.target.value);
-  };
-
-  const isValid = () => {
-    if (!window?.plugins?.socialsharing) {
-      alert('This share feature is not supported on this platform');
-      return false;
-    }
-    if (!imageSrc) {
-      alert('Please generate a picture first');
-      return false;
-    }
-    return true;
-  }
-
-  const shareFacebook = () => {
-    if (isValid()) {
-      window.plugins.socialsharing.shareViaFacebook(
-        'Sharing via Facebook', 
-        imageSrc, 
-        null
-      );
-    }
-  };
-
-  const shareInstgarm = () => {
-    if (isValid()) {
-      window.plugins.socialsharing.shareViaInstagram(
-        'Message via Instagram', 
-        imageSrc
-      );
-    }
   };
 
   return (
@@ -121,12 +88,12 @@ const HomePage = () => {
           <Button
             iconIos='f7:logo_facebook'
             iconMd='material:facebook'
-            onClick={shareFacebook}
+            onClick={() => shareFacebook(imageSrc)}
           />
           <Button
             iconIos='f7:logo_instagram'
             iconMd='material:instagram'
-            onClick={shareInstgarm}
+            onClick={() => shareInstgarm(imageSrc)}
           />
         </div>
       </Block>

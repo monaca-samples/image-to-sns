@@ -14,7 +14,7 @@ It uses `cordova-plugin-x-socialsharing` to share images to social media platfor
 
 ## AI Model
 
-It uses open-source model from Huggingface to generate AI image. The model is `stable-diffusion-xl-base-1.0`.
+It uses open-source model from [Huggingface](https://huggingface.co/) to generate AI image. The model is `stable-diffusion-xl-base-1.0`. You need to signup to [Huggingface](https://huggingface.co/join) and get your own [API key](https://huggingface.co/settings/tokens). You can replace your own API Key at [here](/src/js/util.js).
 
 ## How to Run
 
@@ -23,7 +23,7 @@ npm install
 npm run dev
 ```
 
-Note: To use the cordova plugins, you need to run on mobile phone. You can do it by with [Monaca](https://monaca.io/).
+Note: To use the cordova plugins, you need to run on mobile phone. You can do it with [Monaca](https://monaca.io/).
 
 ## Ref
 
