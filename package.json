@@ -1,0 +1,56 @@
+{
+  "name": "framework7-v8-react-tab-view",
+  "private": true,
+  "version": "1.0.2",
+  "description": "framework7-v8-react-tab-view",
+  "repository": "",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": "~18.16.0",
+    "npm": "~9.5.0"
+  },
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "cross-env NODE_ENV=development vite",
+    "build": "cross-env NODE_ENV=production vite build",
+    "installfont": "cpy --flat ./node_modules/framework7-icons/fonts/*.* ./src/fonts/ && cpy --flat ./node_modules/material-icons/iconfont/*.* ./src/fonts/",
+    "watch": "cross-env NODE_ENV=development vite build --watch",
+    "monaca:preview": "npm run dev & npm run watch",
+    "monaca:transpile": "npm run build",
+    "monaca:debug": "npm run watch"
+  },
+  "browserslist": [
+    "IOS >= 15",
+    "Safari >= 15",
+    "last 5 Chrome versions",
+    "last 5 Firefox versions"
+  ],
+  "dependencies": {
+    "cordova": "12.0.0",
+    "cordova-plugin-x-socialsharing": "6.0.4",
+    "dom7": "4.0.6",
+    "framework7": "8.0.5",
+    "framework7-icons": "5.0.5",
+    "framework7-react": "8.0.5",
+    "material-icons": "1.13.8",
+    "monaca-plugin-monaca-core": "3.3.1",
+    "prop-types": "15.8.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "skeleton-elements": "4.0.1",
+    "swiper": "9.3.2"
+  },
+  "cordova": {
+    "plugins": {
+        "monaca-plugin-monaca-core": {},
+        "cordova-plugin-x-socialsharing": {}
+    }
+},
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.0",
+    "cpy-cli": "^4.2.0",
+    "cross-env": "^7.0.3",
+    "postcss-preset-env": "^8.4.2",
+    "vite": "^4.3.9"
+  }
+}

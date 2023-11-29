@@ -1,0 +1,18 @@
+{
+  "cwd": "/Users/asial/projects/monacaTemplates/monaca-templates-script/framework7/framework7-v8-react-tab-view",
+  "type": [
+    "web"
+  ],
+  "name": "framework7-v8-react-tab-view",
+  "framework": "react",
+  "template": "tabs",
+  "bundler": "vite",
+  "cssPreProcessor": false,
+  "theming": {
+    "customColor": false,
+    "color": "#007aff",
+    "darkMode": false,
+    "iconFonts": true
+  },
+  "customBuild": false
+}
