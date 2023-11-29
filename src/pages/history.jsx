@@ -1,7 +1,7 @@
 import React from 'react';
 import { Page, Navbar, List, ListItem, BlockTitle, useStore } from 'framework7-react';
 
-const CatalogPage = () => {
+const HistoryPage = () => {
   const images = useStore('images');
 
   return (
@@ -18,10 +18,14 @@ const CatalogPage = () => {
             />
           </ListItem>
         ))}
-        {!images?.length && <BlockTitle>No History Yet!</BlockTitle>}
+        {!images?.length && (
+          <div className="text-align-center">
+            <BlockTitle>No History Yet!</BlockTitle>
+          </div>
+        )}
       </List>
     </Page>
   );
 };
 
-export default CatalogPage;
+export default HistoryPage;
