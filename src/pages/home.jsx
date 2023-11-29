@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { Navbar, Page, BlockTitle, Block, Input, Button } from 'framework7-react';
-import { addToLocalStorage, convertToBase64, validImage } from '../js/util';
+import { convertToBase64, getCurrentDateTime, validImage } from '../js/util';
+import store from '../js/store';
 
 const query = async (data) => {
   const key = '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';
@@ -38,7 +39,11 @@ const HomePage = () => {
       const base64Data = await convertToBase64(resultBlob);
       if (validImage(base64Data)) {
         setImageSrc(base64Data);
-        addToLocalStorage(inputValue, base64Data);
+        store.dispatch('addImage', {
+          title: inputValue,
+          src: base64Data,
+          date: getCurrentDateTime(),
+        });
       } else {
         alert('Could not generate image. Please try again.');
         setImageSrc(randomPic);

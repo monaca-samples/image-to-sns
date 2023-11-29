@@ -1,9 +1,8 @@
 import React from 'react';
-import { Page, Navbar, List, ListItem, BlockTitle } from 'framework7-react';
-import { readFromLocalStorage } from '../js/util';
+import { Page, Navbar, List, ListItem, BlockTitle, useStore } from 'framework7-react';
 
 const CatalogPage = () => {
-  const images = readFromLocalStorage();
+  const images = useStore('images');
 
   return (
     <Page name="history">

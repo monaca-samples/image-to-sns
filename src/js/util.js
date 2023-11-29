@@ -4,7 +4,7 @@ const LOCALSTORAGE_KEY = 'monaca-image';
 // global variables
 let globalLocalStorage = null;
 
-function getCurrentDateTime() {
+export function getCurrentDateTime() {
   const now = new Date();
 
   // Get the current date components
@@ -50,21 +50,10 @@ export const readFromLocalStorage = () => {
   }
 }
 
-const writeToLocalStorage = (data) => {
+export const writeToLocalStorage = (data) => {
   const stringifiedData = JSON.stringify(data)
   localStorage.setItem(
     LOCALSTORAGE_KEY,
     stringifiedData
   );
 }
-
-export const addToLocalStorage = (title, imageSrc) => {
-  if (!globalLocalStorage) globalLocalStorage = readFromLocalStorage();
-  globalLocalStorage.push({
-    id: globalLocalStorage.length + 1,
-    title: title,
-    src: imageSrc,
-    date: getCurrentDateTime()
-  });
-  writeToLocalStorage(globalLocalStorage);
-};
